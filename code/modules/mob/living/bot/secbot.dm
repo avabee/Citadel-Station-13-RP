@@ -48,22 +48,6 @@
 	desc = "It's Officer Beep O'sky! Powered by a potato and a shot of whiskey."
 	will_patrol = 1
 
-/mob/living/bot/secbot/slime
-	name = "Slime Securitron"
-	desc = "A little security robot, with a slime baton subsituted for the regular one."
-	default_icon_state = "slimesecbot"
-	stun_strength = 10 // Slimebatons aren't meant for humans.
-	xeno_stun_strength = 5
-	xeno_harm_strength = 9
-	baton_glow = "#33CCFF"
-	req_one_access = list(access_research, access_robotics)
-	botcard_access = list(access_research, access_robotics, access_xenobiology, access_xenoarch, access_tox, access_tox_storage, access_maint_tunnels)
-	used_weapon = /obj/item/weapon/melee/baton/slime
-
-/mob/living/bot/secbot/slime/slimesky
-	name = "Doctor Slimesky"
-	desc = "An old friend of Officer Beep O'sky.  He prescribes beatings to rowdy slimes so that real doctors don't need to treat the xenobiologists."
-
 /mob/living/bot/secbot/update_icons()
 	if(on && busy)
 		icon_state = "[default_icon_state]-c"
@@ -283,15 +267,6 @@
 		visible_message("<span class='warning'>\The [M] was beaten by \the [src] with a stun baton!</span>")
 		insult(S)
 
-/mob/living/bot/secbot/slime/UnarmedAttack(var/mob/living/L, var/proximity)
-	..()
-
-	if(istype(L, /mob/living/simple_animal/slime))
-		var/mob/living/simple_animal/slime/S = L
-		S.adjust_discipline(2)
-
-
-
 /mob/living/bot/secbot/explode()
 	visible_message("<span class='warning'>[src] blows apart!</span>")
 	var/turf/Tsec = get_turf(src)
@@ -389,12 +364,8 @@
 	else if(istype(W, /obj/item/weapon/melee/baton) && build_step == 3)
 		user.drop_item()
 		user << "You complete the Securitron! Beep boop."
-		if(istype(W, /obj/item/weapon/melee/baton/slime))
-			var/mob/living/bot/secbot/slime/S = new /mob/living/bot/secbot/slime(get_turf(src))
-			S.name = created_name
-		else
-			var/mob/living/bot/secbot/S = new /mob/living/bot/secbot(get_turf(src))
-			S.name = created_name
+		var/mob/living/bot/secbot/S = new /mob/living/bot/secbot(get_turf(src))
+		S.name = created_name
 		qdel(W)
 		qdel(src)
 

@@ -16,26 +16,73 @@
 					else
 						return
 
-			if(L in friends)
+			if(!rabid) // new slimes only attack when rabid from hunger
 				return
-
-			if(istype(L, /mob/living/simple_animal/slime))
-				var/mob/living/simple_animal/slime/buddy = L
-				if(buddy.slime_color == src.slime_color || discipline || unity || buddy.unity)
-					return // Don't hurt same colored slimes.
-				else
-					return buddy	//do hurt others
 
 			if(ishuman(L))
 				var/mob/living/carbon/human/H = L
 				if(istype(H.species, /datum/species/monkey)) // istype() is so they'll eat the alien monkeys too.
 					return H // Monkeys are always food.
-
-			if(issilicon(L) || isbot(L))
-				if(discipline && !rabid)
-					return // We're a good slime.  For now at least.
 			return
 	return
+
+/mob/living/simple_animal/slime/handle_stance(var/new_stance)
+	. = ..()
+	switch(stance)
+		if(STANCE_IDLE)
+			hunt_objects() // do slimey things!
+
+/mob/living/simple_animal/slime/proc/eat_food(var/obj/item/weapon/reagent_containers/food/snacks/nom)
+	var/yield = 0
+	if(!nom)
+		return // no food
+	var/tag
+	if(istype(nom, /obj/item/weapon/reagent_containers/food/snacks/grown))
+		var/obj/item/weapon/reagent_containers/food/snacks/grown/veg = nom
+		tag = veg.seed.kitchen_tag
+	else if(istype(nom, /obj/item/weapon/reagent_containers/food/snacks/meat))
+		tag = initial(nom.name)
+	world << LAZYLEN(favorite_food)
+	world << tag
+	world << favorite_food[tag]
+	if(LAZYLEN(favorite_food) && tag && (favorite_food[tag]))
+		yield = 2 // we love this food!
+	yield = 1 // we eat this
+	src.visible_message("[src] eats [nom][yield == 2 ? " and lets out a happy noise!":""].", "You eat [nom][yield == 2 ? " and it tastes amazing!":""].", "You hear the sound of something being absorbed into slime.")
+	var/i
+	for(i=1, i<=yield, i++)
+		for(var/extract in coretype)
+			var/obj/item/slime_extract/SE = new extract(loc)
+			src.visible_message("[src] releases [yield] [SE]s.", "You release [yield] [SE].", "You hear a slime moving.")
+	nutrition = between(nutrition, nutrition + (200 * yield), get_max_nutrition()) // they like it because they're evolutionarily adapted to eat them
+	qdel(nom)
+
+/mob/living/simple_animal/slime/proc/hunt_objects()
+	if(!ascetic) // rainbow slimes don't eat atm, because i need to rebalance their extracts
+		var/nom = find_food(view())
+		if(nom && !Adjacent(nom))
+			WanderTowards(nom.loc)
+			eat_food(nom)
+	if(islarge)
+		return 0
+	var/obj/slime_extract/SE = find_extract(view())
+	if(!SE)
+		return 0
+	merge_extract(SE)
+	return 1
+
+
+/mob/living/simple_animal/slime/proc/find_extract(var/where)
+	var/obj/item/slime_extract/SE = locate() in where
+	return SE
+
+/mob/living/simple_animal/slime/proc/find_food(var/where)
+	var/obj/item/weapon/reagent_containers/food/snacks/nom
+	if(carnivore > 0)
+		nom = locate(/obj/item/weapon/reagent_containers/food/snacks/meat) in where
+	if(!nom && carnivore != 1)
+		nom = locate(/obj/item/weapon/reagent_containers/food/snacks/grown) in where
+	return nom
 
 /mob/living/simple_animal/slime/special_target_check(mob/living/L)
 	if(L.faction == faction && !attack_same && !istype(L, /mob/living/simple_animal/slime))
@@ -45,13 +92,8 @@
 				return TRUE // Monkeys are always food.
 			else
 				return FALSE
-	if(L in friends)
+	if(!rabid)
 		return FALSE
-
-	if(istype(L, /mob/living/simple_animal/slime))
-		var/mob/living/simple_animal/slime/buddy = L
-		if(buddy.slime_color == src.slime_color || discipline || unity || buddy.unity)
-			return FALSE // Don't hurt same colored slimes.
 
 	if(ishuman(L))
 		var/mob/living/carbon/human/H = L
@@ -59,12 +101,7 @@
 			return FALSE // Prometheans are always our friends.
 		else if(istype(H.species, /datum/species/monkey)) // istype() is so they'll eat the alien monkeys too.
 			return TRUE // Monkeys are always food.
-		if(discipline && !rabid)
-			return FALSE // We're a good slime.  For now at least
 
-	if(issilicon(L) || isbot(L) )
-		if(discipline && !rabid)
-			return FALSE // We're a good slime.  For now at least.
 	return ..() // Other colors and nonslimes are jerks however.
 
 /mob/living/simple_animal/slime/ClosestDistance()
@@ -74,8 +111,8 @@
 
 /mob/living/simple_animal/slime/HelpRequested(var/mob/living/simple_animal/slime/buddy)
 	if(istype(buddy))
-		if(buddy.slime_color != src.slime_color && (!unity || !buddy.unity)) // We only help slimes of the same color, if it's another slime calling for help.
-			ai_log("HelpRequested() by [buddy] but they are a [buddy.slime_color] while we are a [src.slime_color].",2)
+		if(LAZYLEN(buddy.slime_color &= src.slime_color)) // We only help slimes that share colors with us, if it's another slime calling for help.
+			ai_log("HelpRequested() by [buddy] but they are a [buddy.slime_color.Join(" ")] while we are a [src.slime_color.Join(" ")].",2)
 			return
 		if(buddy.target_mob)
 			if(!special_target_check(buddy.target_mob))

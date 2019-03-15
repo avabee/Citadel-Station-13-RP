@@ -455,30 +455,17 @@ HALOGEN COUNTER	- Radcount on mobs
 		to_chat(user, "<B>This device can only scan slimes!</B>")
 		return
 	var/mob/living/simple_animal/slime/S = M
-	user.show_message("Slime scan results:<br>[S.slime_color] [S.is_adult ? "adult" : "baby"] slime<br>Health: [S.health]<br>Mutation Probability: [S.mutation_chance]")
-
-	var/list/mutations = list()
-	for(var/potential_color in S.slime_mutation)
-		var/mob/living/simple_animal/slime/slime = potential_color
-		mutations.Add(initial(slime.slime_color))
-	user.show_message("Potental to mutate into [english_list(mutations)] colors.<br>Extract potential: [S.cores]<br>Nutrition: [S.nutrition]/[S.get_max_nutrition()]")
+	user.show_message("Slime scan results:<br>[S.slime_color] [S.is_large ? "largo " : ""]slime<br>Health: [S.health]")
 
 	if (S.nutrition < S.get_starve_nutrition())
 		user.show_message("<span class='alert'>Warning: Subject is starving!</span>")
 	else if (S.nutrition < S.get_hunger_nutrition())
 		user.show_message("<span class='warning'>Warning: Subject is hungry.</span>")
-	user.show_message("Electric change strength: [S.power_charge]")
 
-	if(S.resentment)
-		user.show_message("<span class='warning'>Warning: Subject is harboring resentment.</span>")
 	if(S.docile)
 		user.show_message("Subject has been pacified.")
 	if(S.rabid)
 		user.show_message("<span class='danger'>Subject is enraged and extremely dangerous!</span>")
-	if(S.unity)
-		user.show_message("Subject is friendly to other slime colors.")
-
-	user.show_message("Growth progress: [S.amount_grown]/10")
 
 /obj/item/device/halogen_counter
 	name = "halogen counter"

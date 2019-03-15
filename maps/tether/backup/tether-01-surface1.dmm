@@ -17137,6 +17137,7 @@
 /area/rnd/xenobiology)
 "aGi" = (
 /obj/structure/table/standard,
+/obj/item/weapon/gun/energy/taser/xeno,
 /obj/item/device/multitool,
 /obj/machinery/atmospherics/unary/vent_scrubber/on{
 	dir = 8
@@ -17448,6 +17449,7 @@
 /turf/simulated/floor/tiled,
 /area/rnd/xenobiology)
 "aGM" = (
+/obj/machinery/processor,
 /obj/effect/floor_decal/borderfloor,
 /turf/simulated/floor/tiled,
 /area/rnd/xenobiology)
@@ -17803,6 +17805,7 @@
 /obj/effect/floor_decal/corner/mauve/border{
 	dir = 6
 	},
+/obj/item/weapon/melee/baton/slime/loaded,
 /turf/simulated/floor/tiled,
 /area/rnd/xenobiology)
 "aHB" = (
@@ -24723,14 +24726,14 @@
 	pixel_y = 32
 	},
 /obj/structure/table/standard,
+/obj/item/weapon/gun/energy/taser/xeno,
 /obj/effect/floor_decal/borderfloor{
 	dir = 1
 	},
 /obj/effect/floor_decal/corner/mauve/border{
 	dir = 1
 	},
-/obj/item/weapon/slimevac,
-/obj/item/weapon/slimevac,
+/obj/item/weapon/melee/baton/slime/loaded,
 /turf/simulated/floor/tiled,
 /area/rnd/xenobiology)
 "bkt" = (
@@ -25457,8 +25460,8 @@
 /obj/machinery/door/firedoor/glass,
 /obj/machinery/door/airlock/research{
 	name = "Xenobiology Lab";
-	req_access = list(55);
-	req_one_access = list()
+	req_access = list();
+	req_one_access = list(7,29)
 	},
 /obj/structure/cable/green{
 	d1 = 4;
@@ -27030,8 +27033,8 @@
 /obj/machinery/door/firedoor/glass,
 /obj/machinery/door/airlock/research{
 	name = "Xenobiology Lab";
-	req_access = list(55);
-	req_one_access = list()
+	req_access = list();
+	req_one_access = list(7,29)
 	},
 /turf/simulated/floor/tiled/steel_grid,
 /area/rnd/xenobiology)

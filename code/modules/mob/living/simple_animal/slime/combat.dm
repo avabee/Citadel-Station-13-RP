@@ -16,7 +16,7 @@
 	if(victim)
 		return // Already eatting someone.
 	if(!client) // AI controlled.
-		if( (!target_mob.lying && prob(60 + (power_charge * 4) ) || (!target_mob.lying && optimal_combat) )) // "Smart" slimes always stun first.
+		if( (!target_mob.lying && prob(60) ) || (!target_mob.lying && optimal_combat) ) // "Smart" slimes always stun first.
 			a_intent = I_DISARM // Stun them first.
 		else if(can_consume(target_mob) && target_mob.lying)
 			a_intent = I_GRAB // Then eat them.
@@ -87,7 +87,7 @@
 				victim.adjustToxLoss(rand(2,4) * armor_modifier)
 
 		else if(istype(victim, /mob/living/simple_animal))
-			victim.adjustBruteLoss(is_adult ? rand(7, 15) : rand(4, 12))
+			victim.adjustBruteLoss(is_large ? rand(7, 15) : rand(4, 12))
 
 		else
 			to_chat(src, "<span class='warning'>[pick("This subject is incompatable", \
@@ -129,7 +129,7 @@
 
 			if(I_DISARM)
 				ai_log("DoPunch() against [L], disarming.",2)
-				var/stun_power = between(0, power_charge + rand(0, 3), 10)
+				var/stun_power = between(0, rand(0, 3), 10)
 
 				if(ishuman(L))
 					var/mob/living/carbon/human/H = L
@@ -137,7 +137,6 @@
 
 
 				if(prob(stun_power * 10))
-					power_charge = max(0, power_charge - 3)
 					L.visible_message("<span class='danger'>[src] has shocked [L]!</span>", "<span class='danger'>[src] has shocked you!</span>")
 					playsound(src, 'sound/weapons/Egloves.ogg', 75, 1)
 					L.Weaken(4)
@@ -152,7 +151,7 @@
 					s.start()
 
 					if(prob(stun_power * 10) && stun_power >= 8)
-						L.adjustFireLoss(power_charge * rand(1, 2))
+						L.adjustFireLoss((nutrition <= get_hunger_nutrition()) * rand(1, 2)) // if the slime is hungry, you get burned
 					post_attack(L, a_intent)
 
 				else if(prob(40))
@@ -203,8 +202,9 @@
 
 /mob/living/simple_animal/slime/proc/post_attack(var/mob/living/L, var/intent = I_HURT)
 	if(intent != I_HELP)
-		if(L.reagents && L.can_inject() && reagent_injected)
-			L.reagents.add_reagent(reagent_injected, injection_amount)
+		if(L.reagents && L.can_inject() && LAZYLEN(reagents_injected))
+			for(var/reagent in reagents_injected)
+				L.reagents.add_reagent(reagent, injection_amount/reagents_injected.len)
 
 /mob/living/simple_animal/slime/attackby(obj/item/W, mob/user)
 	if(istype(W, /obj/item/clothing/head)) // Handle hat simulator.
@@ -217,32 +217,6 @@
 		user.setClickCooldown(user.get_attack_speed(W))
 		return
 	..()
-
-/mob/living/simple_animal/slime/hit_with_weapon(obj/item/O, mob/living/user, var/effective_force, var/hit_zone)
-	..()
-	if(!stat)
-		if(O.force > 0 && discipline && !rabid) // wow, buddy, why am I getting attacked??
-			adjust_discipline(1)
-			return
-		if(O.force >= 3)
-			if(victim || target_mob) // We've been a bad slime.
-				if(is_adult)
-					if(prob(5 + round(O.force / 2)) )
-						if(prob(80) && !client)
-							adjust_discipline(2)
-						if(user)
-							step_away(src, user)
-				else
-					if(prob(10 + O.force * 2))
-						if(prob(80) && !client)
-							adjust_discipline(2)
-						if(user)
-							step_away(src, user)
-			else
-				if(user in friends) // Friend attacking us for no reason.
-					if(prob(25))
-						friends -= user
-						say("[user]... not friend...")
 
 /mob/living/simple_animal/slime/attack_hand(mob/living/carbon/human/M as mob)
 	if(victim) // Are we eating someone?
@@ -258,8 +232,6 @@
 			visible_message("<span class='warning'> [M] manages to wrestle \the [name] off!</span>")
 			playsound(loc, 'sound/weapons/thudswoosh.ogg', 50, 1, -1)
 
-			if(prob(40) && !client)
-				adjust_discipline(1)
 			stop_consumption()
 			step_away(src,M)
 	else
@@ -270,8 +242,3 @@
 				..()
 		else
 			..()
-
-// Shocked grilles don't hurt slimes, and in fact give them charge.
-/mob/living/simple_animal/slime/electrocute_act(var/shock_damage, var/obj/source, var/siemens_coeff = 1.0, var/def_zone = null)
-	power_charge = between(0, power_charge + round(shock_damage / 10), 10)
-	to_chat(src, "<span class='notice'>\The [source] shocks you, and it charges you.</span>")

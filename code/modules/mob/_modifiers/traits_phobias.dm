@@ -429,7 +429,7 @@
 			var/mob/living/simple_animal/slime/S = thing
 			if(S.stat == DEAD) // Dead slimes are somewhat less spook.
 				fear_amount += 4
-			if(S.is_adult == TRUE) //big boy
+			if(S.is_large == TRUE) //big boy
 				fear_amount += 8
 			else
 				fear_amount += 6

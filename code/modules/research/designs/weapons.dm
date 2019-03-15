@@ -149,19 +149,12 @@
 	sort_string = "TBAAA"
 
 // Xenobio Tools
-/datum/design/item/weapon/slimebation
-	id = "slimebation"
-	req_tech = list(TECH_MATERIAL = 2, TECH_BIO = 2, TECH_POWER = 3, TECH_COMBAT = 3)
+/datum/design/item/weapon/slimevac
+	id = "slimevac"
+	req_tech = list(TECH_BIO = 2, TECH_POWER = 2, TECH_MAGNET = 2)
 	materials = list(DEFAULT_WALL_MATERIAL = 5000)
-	build_path = /obj/item/weapon/melee/baton/slime
+	build_path = /obj/item/weapon/slimevac
 	sort_string = "TBAAB"
-
-/datum/design/item/weapon/slimetaser
-	id = "slimetaser"
-	req_tech = list(TECH_MATERIAL = 3, TECH_BIO = 3, TECH_POWER = 4, TECH_COMBAT = 4)
-	materials = list(DEFAULT_WALL_MATERIAL = 5000)
-	build_path = /obj/item/weapon/gun/energy/taser/xeno
-	sort_string = "TBAAC"
 
 // Phase Weapons
 /datum/design/item/weapon/phase_pistol

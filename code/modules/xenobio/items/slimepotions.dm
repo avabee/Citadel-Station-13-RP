@@ -14,50 +14,44 @@
 	icon_state = "potpurple"
 	description_info = "This will even work on inert slime extracts, if it wasn't enhanced before.  Extracts enhanced cannot be enhanced again."
 
-// Makes slimes less likely to mutate.
-/obj/item/slimepotion/stabilizer
-	name = "slime stabilizer agent"
-	desc = "A potent chemical mix that will reduce the chance of a slime mutating."
+// Makes slimes more stupider.
+/obj/item/slimepotion/sedative
+	name = "slime sedative agent"
+	desc = "A potent chemical mix that will make a slime less reactive."
 	icon_state = "potcyan"
-	description_info = "The slime needs to be alive for this to work.  It will reduce the chances of mutation by 15%."
+	description_info = "The slime needs to be alive for this to work.  It will make a slime less tactically adept."
 
-/obj/item/slimepotion/stabilizer/attack(mob/living/simple_animal/slime/M, mob/user)
+/obj/item/slimepotion/sedative/attack(mob/living/simple_animal/slime/M, mob/user)
 	if(!istype(M))
-		to_chat(user, "<span class='warning'>The stabilizer only works on slimes!</span>")
+		to_chat(user, "<span class='warning'>The sedative only works on slimes!</span>")
 		return ..()
 	if(M.stat == DEAD)
 		to_chat(user, "<span class='warning'>The slime is dead!</span>")
 		return ..()
-	if(M.mutation_chance == 0)
-		to_chat(user, "<span class='warning'>The slime already has no chance of mutating!</span>")
-		return ..()
 
-	to_chat(user, "<span class='notice'>You feed the slime the stabilizer. It is now less likely to mutate.</span>")
-	M.mutation_chance = between(0, M.mutation_chance - 15, 100)
+	to_chat(user, "<span class='notice'>You feed the slime the sedative..</span>")
+	M.optimal_combat = 0
 	playsound(src, 'sound/effects/bubbles.ogg', 50, 1)
 	qdel(src)
 
 
-// The opposite, makes the slime more likely to mutate.
-/obj/item/slimepotion/mutator
-	name = "slime mutator agent"
-	desc = "A potent chemical mix that will increase the chance of a slime mutating."
-	description_info = "The slime needs to be alive for this to work.  It will increase the chances of mutation by 12%."
+// The opposite, makes the slime more tactically adept.
+/obj/item/slimepotion/nootropic
+	name = "slime nootropic agent"
+	desc = "A potent chemical mix that will increase a slime's mental acuity."
+	description_info = "The slime needs to be alive for this to work.  It will increase a slime's tactical awareness."
 	icon_state = "potred"
 
-/obj/item/slimepotion/mutator/attack(mob/living/simple_animal/slime/M, mob/user)
+/obj/item/slimepotion/nootropic/attack(mob/living/simple_animal/slime/M, mob/user)
 	if(!istype(M))
-		to_chat(user, "<span class='warning'>The mutator only works on slimes!</span>")
+		to_chat(user, "<span class='warning'>The nootropic only works on slimes!</span>")
 		return ..()
 	if(M.stat == DEAD)
 		to_chat(user, "<span class='warning'>The slime is dead!</span>")
 		return ..()
-	if(M.mutation_chance == 100)
-		to_chat(user, "<span class='warning'>The slime is already guaranteed to mutate!</span>")
-		return ..()
 
-	to_chat(user, "<span class='notice'>You feed the slime the mutator. It is now more likely to mutate.</span>")
-	M.mutation_chance = between(0, M.mutation_chance + 12, 100)
+	to_chat(user, "<span class='notice'>You feed the slime the nootropic. It is now more tactically aware.</span>")
+	M.optimal_combat = 1
 	playsound(src, 'sound/effects/bubbles.ogg', 50, 1)
 	qdel(src)
 
@@ -116,9 +110,8 @@
 // Makes slimes make more extracts.
 /obj/item/slimepotion/steroid
 	name = "slime steroid agent"
-	desc = "A potent chemical mix that will increase the amount of extracts obtained from harvesting a slime."
-	description_info = "The slime needs to be alive and not an adult for this to work.  It will increase the amount of extracts gained by one, up to a max of five per slime.  \
-	Extra extracts are not passed down to offspring when reproducing."
+	desc = "A potent chemical mix that will make a largo slime physically stronger."
+	description_info = "The slime needs to be alive and a largo for this to work.  It will increase the amount of health to 150%."
 	icon_state = "potpurple"
 
 /obj/item/slimepotion/steroid/attack(mob/living/simple_animal/slime/M, mob/user)
@@ -128,42 +121,39 @@
 	if(M.stat == DEAD)
 		to_chat(user, "<span class='warning'>The slime is dead!</span>")
 		return ..()
-	if(M.is_adult) //Can't steroidify adults
-		to_chat(user, "<span class='warning'>Only baby slimes can use the steroid!</span>")
+	if(!M.is_large) //Can't steroidify adults
+		to_chat(user, "<span class='warning'>Only largo slimes can use the steroid!</span>")
 		return ..()
-	if(M.cores >= 5)
-		to_chat(user, "<span class='warning'>The slime already has the maximum amount of extract!</span>")
+	if(!M.steroid)
+		to_chat(user, "<span class='warning'>You can't overdose slimes on steroids!</span>")
 		return ..()
 
 	to_chat(user, "<span class='notice'>You feed the slime the steroid. It will now produce one more extract.</span>")
-	M.cores++
+	M.maxHealth *= 1.5
+	M.steroid = TRUE
 	playsound(src, 'sound/effects/bubbles.ogg', 50, 1)
 	qdel(src)
 
 
-// Makes slimes not try to murder other slime colors.
-/obj/item/slimepotion/unity
-	name = "slime unity agent"
-	desc = "A potent chemical mix that makes the slime feel and be seen as all the colors at once, and as a result not be considered an enemy to any other color."
-	description_info = "The slime needs to be alive for this to work.  Slimes unified will not attack or be attacked by other colored slimes, and this will \
-	carry over to offspring when reproducing."
+// Makes a promethean cube from a slime.
+/obj/item/slimepotion/sapience
+	name = "slime sapience agent"
+	desc = "A potent chemical mix that makes the slime condense into a promethean core."
+	description_info = "The slime needs to be alive for this to work."
 	icon_state = "potpink"
 
-/obj/item/slimepotion/unity/attack(mob/living/simple_animal/slime/M, mob/user)
+/obj/item/slimepotion/sapience/attack(mob/living/simple_animal/slime/M, mob/user)
 	if(!istype(M))
 		to_chat(user, "<span class='warning'>The agent only works on slimes!</span>")
 		return ..()
 	if(M.stat == DEAD)
 		to_chat(user, "<span class='warning'>The slime is dead!</span>")
 		return ..()
-	if(M.unity == TRUE)
-		to_chat(user, "<span class='warning'>The slime is already unified!</span>")
-		return ..()
 
-	to_chat(user, "<span class='notice'>You feed the slime the agent. It will now be friendly to all other slimes.</span>")
-	to_chat(M, "<span class='notice'>\The [user] feeds you \the [src], and you suspect that all the other slimes will be \
-	your friends, at least if you don't attack them first.</span>")
-	M.unify()
+	to_chat(user, "<span class='notice'>You feed the slime the sapience agent, and it condenses into a cube.")
+	var/obj/item/slime_cube/SC = new()
+	SC.color = M.color
+	qdel(M)
 	playsound(src, 'sound/effects/bubbles.ogg', 50, 1)
 	qdel(src)
 
@@ -180,7 +170,7 @@
 		to_chat(user, "<span class='warning'>The agent only works on animals!</span>")
 		return ..()
 	if(M.intelligence_level > SA_ANIMAL) // So you can't use this on Russians/syndies/hivebots/etc.
-		to_chat(user, "<span class='warning'>\The [M] is too intellient for this to affect them.</span>")
+		to_chat(user, "<span class='warning'>\The [M] is too intelligent for this to affect them.</span>")
 		return ..()
 	if(M.stat == DEAD)
 		to_chat(user, "<span class='warning'>The animal is dead!</span>")
@@ -235,21 +225,19 @@
 // Feeds the slime instantly.
 /obj/item/slimepotion/feeding
 	name = "slime feeding agent"
-	desc = "A potent chemical mix that will instantly sediate the slime."
-	description_info = "The slime needs to be alive for this to work.  It will instantly grow the slime enough to reproduce."
+	desc = "A potent chemical mix that will instantly sate the slime's hunger."
+	description_info = "The slime needs to be alive for this to work.."
 	icon_state = "potyellow"
 
 /obj/item/slimepotion/feeding/attack(mob/living/simple_animal/slime/M, mob/user)
 	if(!istype(M))
-		to_chat(user, "<span class='warning'>The mutator only works on slimes!</span>")
+		to_chat(user, "<span class='warning'>The feeding agent only works on slimes!</span>")
 		return ..()
 	if(M.stat == DEAD)
 		to_chat(user, "<span class='warning'>The slime is dead!</span>")
 		return ..()
 
-	to_chat(user, "<span class='notice'>You feed the slime the feeding agent. It will now instantly reproduce.</span>")
-	M.make_adult()
-	M.amount_grown = 10
-	M.reproduce()
+	to_chat(user, "<span class='notice'>You feed the slime the feeding agent.</span>")
+	M.nutrition = M.get_max_nutrition()
 	playsound(src, 'sound/effects/bubbles.ogg', 50, 1)
 	qdel(src)

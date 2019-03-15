@@ -2,29 +2,22 @@
 	nutrition = between(0, nutrition + input, get_max_nutrition())
 
 	if(input > 0)
-		if(prob(input * 2)) // Gain around one level per 50 nutrition
-			power_charge = min(power_charge++, 10)
-			if(power_charge == 10)
-				adjustToxLoss(-10)
+		if(prob(input * 2) && (nutrition < (get_max_nutrition() + get_hunger_nutrition())/2)) // halfway between hungry and full, you start healing toxins
+			adjustToxLoss(-10)
 
 
 /mob/living/simple_animal/slime/proc/get_max_nutrition() // Can't go above it
-	if(is_adult)
+	if(is_large)
 		return 1200
 	return 1000
 
-/mob/living/simple_animal/slime/proc/get_grow_nutrition() // Above it we grow, below it we can eat
-	if(is_adult)
-		return 1000
-	return 800
-
 /mob/living/simple_animal/slime/proc/get_hunger_nutrition() // Below it we will always eat
-	if(is_adult)
+	if(is_large)
 		return 600
 	return 500
 
 /mob/living/simple_animal/slime/proc/get_starve_nutrition() // Below it we will eat before everything else
-	if(is_adult)
+	if(is_large)
 		return 300
 	return 200
 
@@ -32,17 +25,15 @@
 	if(docile)
 		return
 	if(prob(15))
-		adjust_nutrition(-1 - is_adult)
+		adjust_nutrition(-1 - is_large)
 
 	if(nutrition <= get_starve_nutrition())
 		handle_starvation()
 
-	else if(nutrition >= get_grow_nutrition() && amount_grown < 10)
-		adjust_nutrition(-20)
-		amount_grown = between(0, amount_grown + 1, 10)
-
 /mob/living/simple_animal/slime/proc/handle_starvation()
 	if(nutrition < get_starve_nutrition() && !client) // if a slime is starving, it starts losing its friends
+		if(prob(5))
+			rabid = TRUE
 		if(friends.len && prob(1))
 			var/mob/nofriend = pick(friends)
 			if(nofriend)
@@ -50,29 +41,14 @@
 				say("[nofriend]... food now...")
 
 	if(nutrition <= 0)
+		rabid = TRUE
 		adjustToxLoss(rand(1,3))
 		if(client && prob(5))
 			to_chat(src, "<span class='danger'>You are starving!</span>")
 
-/mob/living/simple_animal/slime/proc/handle_discipline()
-	if(discipline > 0)
-		update_mood()
-	//	if(discipline >= 5 && rabid)
-	//		if(prob(60))
-	//			rabid = 0
-	//			adjust_discipline(1) // So it stops trying to murder everyone.
-
-		// Handle discipline decay.
-		if(!prob(75 + (obedience * 5)))
-			adjust_discipline(-1)
-	if(!discipline)
-		update_mood()
-
 /mob/living/simple_animal/slime/handle_regular_status_updates()
 	if(stat != DEAD)
 		handle_nutrition()
-
-		handle_discipline()
 
 		if(prob(30))
 			adjustOxyLoss(-1)
@@ -83,12 +59,6 @@
 
 		if(victim)
 			handle_consumption()
-
-		if(amount_grown >= 10 && !target_mob && !client)
-			if(is_adult)
-				reproduce()
-			else
-				evolve()
 
 		handle_stuttering()
 
@@ -140,7 +110,6 @@
 				else
 					delayed_say("Fine...", speaker)
 					stop_consumption()
-					adjust_discipline(1, TRUE)
 
 			if(target_mob) // We're being asked to stop chasing someone.
 				if(!can_command(speaker))
@@ -149,7 +118,6 @@
 				else
 					delayed_say("Fine...", speaker)
 					LoseTarget()
-					adjust_discipline(1, TRUE)
 
 			if(follow_mob) // We're being asked to stop following someone.
 				if(can_command(speaker) == SLIME_COMMAND_FRIEND || follow_mob == speaker)

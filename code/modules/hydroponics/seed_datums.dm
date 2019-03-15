@@ -63,6 +63,7 @@
 	display_name = "glowberry bush"
 	mutants = null
 	chems = list("nutriment" = list(1,10), "uranium" = list(3,5))
+	kitchen_tag = "glowberry"
 
 /datum/seed/berry/glow/New()
 	..()
@@ -82,6 +83,7 @@
 	seed_name = "poison berry"
 	display_name = "poison berry bush"
 	mutants = list("deathberries")
+	kitchen_tag = "poison berry"
 	chems = list("nutriment" = list(1), "toxin" = list(3,5), "poisonberryjuice" = list(10,5))
 
 /datum/seed/berry/poison/New()
@@ -96,6 +98,7 @@
 	display_name = "death berry bush"
 	mutants = null
 	chems = list("nutriment" = list(1), "toxin" = list(3,3), "lexorin" = list(1,5))
+	kitchen_tag = "death berry"
 
 /datum/seed/berry/poison/death/New()
 	..()
@@ -209,6 +212,7 @@
 	display_name = "bluespace tomato plant"
 	mutants = null
 	chems = list("nutriment" = list(1,20), "singulo" = list(10,5))
+	kitchen_tag = "bluespace tomato"
 
 /datum/seed/tomato/blue/teleport/New()
 	..()
@@ -485,6 +489,7 @@
 	display_name = "plastellium"
 	mutants = null
 	chems = list("plasticide" = list(1,10))
+	kitchen_tag = "plastellium"
 
 /datum/seed/mushroom/plastic/New()
 	..()
@@ -971,6 +976,7 @@
 	seed_name = "cacao"
 	display_name = "cacao tree"
 	chems = list("nutriment" = list(1,10), "coco" = list(4,5))
+	kitchen_tag = "cacao"
 
 /datum/seed/cocoa/New()
 	..()

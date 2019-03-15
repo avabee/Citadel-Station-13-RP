@@ -552,8 +552,6 @@ proc/is_blind(A)
 	if(stat == DEAD)
 		return SAFE_PERP
 
-	if(is_justified_to_discipline())
-		threatcount += 4
 /*
 	if(discipline && !rabid)
 		if(!target_mob || istype(target_mob, /mob/living/carbon/human/monkey))

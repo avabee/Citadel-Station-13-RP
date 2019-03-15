@@ -15,9 +15,13 @@
 	flags = OPENCONTAINER
 
 
-/obj/item/slime_extract/New()
+/obj/item/slime_extract/initialize()
 	..()
 	create_reagents(60)
+
+/obj/item/slime_extract/proc/apply_info(var/mob/living/simple_animal/slime/S)
+	world << S.color
+	return 1 // we have no reason to deny applying a blank extract
 
 /obj/item/slime_extract/attackby(obj/item/O, mob/user)
 	if(istype(O, /obj/item/slimepotion/enhancer))
@@ -267,15 +271,15 @@
 	required = /obj/item/slime_extract/blue
 
 
-/datum/chemical_reaction/slime/blue_stability
-	name = "Slime Stability"
-	id = "m_stability"
+/datum/chemical_reaction/slime/blue_sedative
+	name = "Slime Sedative"
+	id = "m_sedative"
 	required_reagents = list("blood" = 5)
 	result_amount = 1
 	required = /obj/item/slime_extract/blue
 
-/datum/chemical_reaction/slime/blue_stability/on_reaction(var/datum/reagents/holder)
-	new /obj/item/slimepotion/stabilizer(get_turf(holder.my_atom))
+/datum/chemical_reaction/slime/blue_sedative/on_reaction(var/datum/reagents/holder)
+	new /obj/item/slimepotion/sedative(get_turf(holder.my_atom))
 	..()
 
 
@@ -287,8 +291,7 @@
 /obj/item/slime_extract/purple
 	name = "purple slime extract"
 	icon_state = "purple slime extract"
-	description_info = "This extract can create a slime steroid agent when injected with phoron, which increases the amount of slime extracts the processor \
-	can extract from a slime specimen."
+	description_info = "This extract can create a slime steroid agent when injected with phoron, which increases the amount of health a slime has."
 
 
 /datum/chemical_reaction/slime/purple_steroid
@@ -576,15 +579,15 @@
 
 
 
-/datum/chemical_reaction/slime/red_mutation
-	name = "Slime Mutation"
-	id = "m_mutation"
+/datum/chemical_reaction/slime/red_nootropic
+	name = "Slime Nootropic"
+	id = "m_nootropic"
 	required_reagents = list("phoron" = 5)
 	result_amount = 1
 	required = /obj/item/slime_extract/red
 
 /datum/chemical_reaction/slime/red_mutation/on_reaction(var/datum/reagents/holder)
-	new /obj/item/slimepotion/mutator(get_turf(holder.my_atom))
+	new /obj/item/slimepotion/nootropic(get_turf(holder.my_atom))
 	..()
 
 // ***************
@@ -946,42 +949,3 @@
 	icon_state = "rainbow slime extract"
 	description_info = "This extract will create a baby slime of a random color when injected with phoron, or a slime unification agent if injected with water, \
 	which makes slimes stop attacking other slime colors."
-
-
-/datum/chemical_reaction/slime/rainbow_random_slime
-	name = "Slime Random Slime"
-	id = "m_rng_slime"
-	required_reagents = list("phoron" = 5)
-	result_amount = 1
-	required = /obj/item/slime_extract/rainbow
-
-
-/datum/chemical_reaction/slime/rainbow_random_slime/on_reaction(var/datum/reagents/holder)
-	var/mob/living/simple_animal/slime/S
-	var/list/slime_types = typesof(/mob/living/simple_animal/slime)
-
-	while(slime_types.len)
-		S = pick(slime_types)
-		if(initial(S.rainbow_core_candidate) == TRUE)
-			break
-		else
-			slime_types -= S
-			S = null
-
-	if(S)
-		new S(get_turf(holder.my_atom))
-	..()
-
-/datum/chemical_reaction/slime/rainbow_unity
-	name = "Slime Unity"
-	id = "m_unity"
-	required_reagents = list("water" = 5)
-	result_amount = 1
-	required = /obj/item/slime_extract/rainbow
-
-/datum/chemical_reaction/slime/rainbow_unity/on_reaction(var/datum/reagents/holder)
-	new /obj/item/slimepotion/unity(get_turf(holder.my_atom))
-	..()
-
-
-
