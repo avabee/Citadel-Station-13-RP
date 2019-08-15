@@ -36,6 +36,9 @@
 /mob/living/silicon/isSynthetic()
 	return 1
 
+/mob/living/carbon/human/isPromethean()
+	return 1
+
 /mob/proc/isMonkey()
 	return 0
 
@@ -545,29 +548,6 @@ proc/is_blind(A)
 				threatcount += 4
 	return threatcount
 
-// Beepsky will (try to) only beat 'bad' slimes.
-/mob/living/simple_animal/slime/assess_perp(var/obj/access_obj, var/check_access, var/auth_weapons, var/check_records, var/check_arrest)
-	var/threatcount = 0
-
-	if(stat == DEAD)
-		return SAFE_PERP
-
-/*
-	if(discipline && !rabid)
-		if(!target_mob || istype(target_mob, /mob/living/carbon/human/monkey))
-			return SAFE_PERP
-
-	if(target_mob)
-		threatcount += 4
-
-	if(victim)
-		threatcount += 4
-*/
-	if(rabid)
-		threatcount = 10
-
-	return threatcount
-
 #undef SAFE_PERP
 
 
@@ -658,3 +638,4 @@ var/global/image/backplane
 		return
 
 	item.screen_loc = screen_place
+>>>>>>> c5558efb1e5ed632b9426f1b4c05007cd4744523

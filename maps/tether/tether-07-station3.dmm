@@ -6480,8 +6480,6 @@
 	dir = 8
 	},
 /obj/structure/closet/secure_closet/hos,
-/obj/item/clothing/suit/space/void/security/fluff/hos,
-/obj/item/clothing/head/helmet/space/void/security/fluff/hos,
 /turf/simulated/floor/wood,
 /area/crew_quarters/heads/hos)
 "kI" = (
@@ -7469,6 +7467,15 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/railing{
 	dir = 4
+	},
+/obj/machinery/power/apc{
+	cell_type = /obj/item/weapon/cell/super;
+	dir = 8;
+	name = "west bump";
+	pixel_x = -28
+	},
+/obj/structure/cable{
+	icon_state = "0-4"
 	},
 /turf/simulated/floor,
 /area/maintenance/cargo)
@@ -16253,15 +16260,17 @@
 /area/quartermaster/qm)
 "zK" = (
 /obj/structure/grille,
-/obj/structure/window/reinforced/full,
 /obj/machinery/door/firedoor/glass,
+/obj/structure/window/reinforced/polarized/full{
+	id = "qm_office"
+	},
 /turf/simulated/floor/plating,
 /area/quartermaster/qm)
 "zL" = (
 /turf/simulated/wall,
 /area/quartermaster/qm)
 "zM" = (
-/obj/machinery/door/airlock/glass_mining{
+/obj/machinery/door/airlock/mining{
 	name = "Quartermaster";
 	req_access = list(41);
 	req_one_access = list()
@@ -17597,6 +17606,11 @@
 /obj/effect/landmark/start{
 	name = "Quartermaster"
 	},
+/obj/machinery/button/windowtint{
+	id = "qm_office";
+	pixel_x = 26;
+	pixel_y = 8
+	},
 /turf/simulated/floor/tiled,
 /area/quartermaster/qm)
 "BN" = (
@@ -18063,7 +18077,7 @@
 /turf/simulated/floor/tiled,
 /area/quartermaster/qm)
 "CH" = (
-/obj/machinery/door/airlock/glass_mining{
+/obj/machinery/door/airlock/mining{
 	name = "Quartermaster";
 	req_access = list(41);
 	req_one_access = list()
@@ -27617,6 +27631,10 @@
 	},
 /turf/simulated/floor/tiled/dark,
 /area/security/warden)
+"RU" = (
+/obj/machinery/suit_cycler/headofsecurity,
+/turf/simulated/floor/wood,
+/area/crew_quarters/heads/hos)
 "Sa" = (
 /obj/machinery/atmospherics/pipe/manifold/hidden/scrubbers,
 /obj/machinery/atmospherics/pipe/manifold/hidden/supply{
@@ -27691,6 +27709,13 @@
 	},
 /turf/simulated/floor/tiled,
 /area/security/eva)
+"UK" = (
+/obj/random/trash_pile,
+/obj/structure/railing{
+	dir = 4
+	},
+/turf/simulated/floor,
+/area/maintenance/station/sec_upper)
 "Vn" = (
 /obj/structure/bed/chair/office/dark{
 	dir = 4
@@ -27726,10 +27751,43 @@
 	},
 /turf/simulated/floor/bluegrid,
 /area/ai/foyer)
+"WF" = (
+/obj/structure/cable{
+	icon_state = "1-2"
+	},
+/obj/structure/catwalk,
+/obj/structure/cable{
+	icon_state = "2-8"
+	},
+/turf/simulated/floor,
+/area/maintenance/cargo)
 "WY" = (
 /obj/machinery/hologram/holopad,
 /turf/simulated/floor/tiled/dark,
 /area/security/evidence_storage)
+"Xv" = (
+/obj/machinery/power/apc{
+	dir = 1;
+	name = "north bump";
+	pixel_x = 0;
+	pixel_y = 24
+	},
+/obj/structure/cable{
+	d2 = 2;
+	icon_state = "0-2"
+	},
+/turf/simulated/floor,
+/area/maintenance/station/sec_upper)
+"Xy" = (
+/obj/structure/cable{
+	icon_state = "4-8"
+	},
+/obj/structure/catwalk,
+/obj/structure/cable{
+	icon_state = "1-4"
+	},
+/turf/simulated/floor,
+/area/maintenance/station/sec_upper)
 "XG" = (
 /obj/machinery/hologram/holopad,
 /turf/simulated/floor/tiled,
@@ -27743,6 +27801,29 @@
 	},
 /turf/simulated/floor/bluegrid,
 /area/ai/foyer)
+"YO" = (
+/obj/structure/table/rack{
+	dir = 8;
+	layer = 2.6
+	},
+/obj/structure/window/reinforced,
+/obj/structure/window/reinforced{
+	dir = 4
+	},
+/obj/machinery/door/window/northleft{
+	name = "Prototype Hardsuit Storage";
+	req_access = list(58)
+	},
+/obj/item/device/suit_cooling_unit,
+/obj/item/weapon/tank/jetpack/carbondioxide,
+/obj/item/clothing/shoes/magboots,
+/obj/item/clothing/suit/space/void/headofsecurity,
+/obj/item/clothing/head/helmet/space/void/headofsecurity,
+/obj/structure/window/reinforced{
+	dir = 8
+	},
+/turf/simulated/floor/wood,
+/area/crew_quarters/heads/hos)
 "ZO" = (
 /obj/machinery/atmospherics/unary/vent_scrubber/on,
 /turf/simulated/floor/tiled,
@@ -36736,12 +36817,12 @@ bu
 iR
 cs
 cZ
-dt
 ds
 ds
 ds
-eY
-kI
+ds
+kv
+YO
 je
 li
 lH
@@ -36877,13 +36958,13 @@ aU
 iH
 iT
 je
-je
-je
+kI
+dt
 dN
 en
 eF
-je
-je
+eY
+RU
 je
 eZ
 lI
@@ -37019,13 +37100,13 @@ aU
 iI
 iU
 iU
-db
 je
 je
 je
 je
 je
-db
+je
+je
 af
 le
 lJ
@@ -37167,7 +37248,7 @@ qU
 qU
 aI
 fb
-fq
+UK
 fG
 le
 lK
@@ -37587,8 +37668,8 @@ bm
 bm
 bm
 bm
-iq
-dy
+Xv
+Xy
 aI
 ab
 ab
@@ -37870,7 +37951,7 @@ bc
 pS
 eW
 pN
-iq
+db
 iq
 dy
 aI
@@ -38591,7 +38672,7 @@ fx
 dT
 dT
 lN
-dT
+WF
 dT
 dT
 dT

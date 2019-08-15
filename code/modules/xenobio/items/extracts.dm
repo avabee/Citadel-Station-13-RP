@@ -937,15 +937,3 @@
 /datum/chemical_reaction/slime/light_pink_friendship/on_reaction(var/datum/reagents/holder)
 	new /obj/item/slimepotion/friendship(get_turf(holder.my_atom))
 	..()
-
-
-// ******************
-// * Rainbow slimes *
-// ******************
-
-
-/obj/item/slime_extract/rainbow
-	name = "rainbow slime extract"
-	icon_state = "rainbow slime extract"
-	description_info = "This extract will create a baby slime of a random color when injected with phoron, or a slime unification agent if injected with water, \
-	which makes slimes stop attacking other slime colors."

@@ -55,6 +55,7 @@ HALOGEN COUNTER	- Radcount on mobs
 	if (!(ishuman(user) || ticker) && ticker.mode.name != "monkey")
 		to_chat(user, "<span class='warning'>You don't have the dexterity to do this!</span>")
 		return
+	flick("[icon_state]-scan", src)	//makes it so that it plays the scan animation on a succesful scan
 	user.visible_message("<span class='notice'>[user] has analyzed [M]'s vitals.</span>","<span class='notice'>You have analyzed [M]'s vitals.</span>")
 
 	if (!ishuman(M) || M.isSynthetic())
@@ -461,7 +462,6 @@ HALOGEN COUNTER	- Radcount on mobs
 		user.show_message("<span class='alert'>Warning: Subject is starving!</span>")
 	else if (S.nutrition < S.get_hunger_nutrition())
 		user.show_message("<span class='warning'>Warning: Subject is hungry.</span>")
-
 	if(S.docile)
 		user.show_message("Subject has been pacified.")
 	if(S.rabid)
